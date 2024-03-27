@@ -2,7 +2,10 @@ package com.unittests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -11,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import com.unittests.exceptions.UserException;
 import com.unittests.models.User;
 import com.unittests.repositories.UserRepository;
 import com.unittests.services.UserService;
@@ -74,6 +78,29 @@ class UnitTestsApplicationTests {
 
 		assertEquals("Jonas Dias", result.getUsername());
 		assertEquals("12345678", result.getPassword());
+	}
+
+	@Test
+	void testDeleteUserWhenUserExists() {
+		Long userId = 1L;
+
+		when(userRepositoryMock.existsById(userId)).thenReturn(true);
+		userServiceMock.delete(userId);
+
+		verify(userRepositoryMock, times(1)).deleteById(userId);
+	}
+
+	@Test
+	void testDeleteUserWhenUserDoesNotExist() {
+		Long userId = 1L;
+
+		when(userRepositoryMock.existsById(userId)).thenReturn(false);
+
+		UserException exception = assertThrows(UserException.class, () -> userServiceMock.delete(userId));
+
+		assertEquals("User not found", exception.getMessage());
+
+		verify(userRepositoryMock, never()).deleteById(anyLong());
 	}
 
 }

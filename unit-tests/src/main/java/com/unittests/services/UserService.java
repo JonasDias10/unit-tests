@@ -22,6 +22,10 @@ public class UserService {
       }
 
       public void delete(Long id) {
+            if (!userRepository.existsById(id)) {
+                  throw new UserException("User not found");
+            }
+
             userRepository.deleteById(id);
       }
 

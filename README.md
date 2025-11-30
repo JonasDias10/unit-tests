@@ -38,7 +38,3 @@ This command will execute all the unit tests defined in the project and provide 
 ## Unit Tests Results
 
 ![Unit Tests Results](./media/tests-results.png)
-
----
-
-**Author: Jonas Dias | [Social Media](https://jonas-dias.netlify.app/) | Thank You**
